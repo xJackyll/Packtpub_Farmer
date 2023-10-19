@@ -6,9 +6,9 @@
 # Autore: xJackyll
 #
 # Questo script, leggendo un file di testo, riscatta il libro del giorno per ogni account specificato.
-# Attenzione: i captcha non sono supportati da questo script. 
-# 
-# N.B.  Non modificare lo script se non si ha chiaro cosa si sta facendo 
+# Attenzione: i captcha non sono supportati da questo script.
+#
+# N.B.  Non modificare lo script se non si ha chiaro cosa si sta facendo
 
 
 from selenium import webdriver
@@ -19,7 +19,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
 import logging
-import os 
+import os
 
 # --------------------------------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ def log_error(message):
 def read_users():
     with open(Accounts_Path) as f:
         lines = f.readlines()
-    
+
     i = 0
     while i < len(lines):
         username = lines[i].strip()
@@ -118,25 +118,25 @@ for user, passwd in read_users():
     try:
 
         #  Controllo che esista il bottone di sign in, se non lo trovo sul sito assumo che siamo gia' autenticati
-        try: 
+        try:
             log_info("Tentivo di accedere alla pagina di login")
-            time.sleep(5)
+            time.sleep(3)
             #WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/main/header/div/div[2]/div/div[2]/div[1]/form/div[5]/div/div[2]/a/button"))).click()
             WebRequest('/html/body/div[1]/div/main/header/div/div[2]/div/div[2]/div[1]/form/div[5]/div/div[2]/a/button')
-                        
+
             # Immetto le credenziali di accesso nella pagina di login
             log_info('Pagina di login raggiunta!')
             log_info("Immetto email e pw...")
-            time.sleep(5)
-            WebRequest('/html/body/app-root/div/ng-component/div/div/ng-component/div/form/div[1]/input', user)
-            WebRequest('/html/body/app-root/div/ng-component/div/div/ng-component/div/form/div[2]/input', passwd)
-            WebRequest('/html/body/app-root/div/ng-component/div/div/ng-component/div/form/button')      
-                
+            time.sleep(3)
+            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/div[2]/div[1]/div[1]/input', user)
+            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/div[2]/div[1]/div[2]/input', passwd)
+            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/div[3]/button')
+
         except:
             log_info("siamo gia' autenticati")
 
         # Bottone di riscatto del libro
-        time.sleep(5)
+        time.sleep(3)
         WebRequest("/html/body/div[1]/div/main/header/div/div[2]/div/div/div/div[2]/button")
         log_info("Libro riscattato!")
         #WebRequest("/html/body/div[1]/div/div[2]/nav/div[4]/a[3]")
