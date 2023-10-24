@@ -128,9 +128,9 @@ for user, passwd in read_users():
             log_info('Pagina di login raggiunta!')
             log_info("Immetto email e pw...")
             time.sleep(3)
-            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/div[2]/div[1]/div[1]/input', user)
-            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/div[2]/div[1]/div[2]/input', passwd)
-            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/div[3]/button')
+            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/form/div[1]/div[1]/div[1]/input', user)
+            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/form/div[1]/div[1]/div[2]/input', passwd)
+            WebRequest('/html/body/div[1]/div/div/div[2]/div/div/form/div[1]/div[1]/div[2]/input')   
 
         except:
             log_info("siamo gia' autenticati")
