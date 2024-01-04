@@ -17,6 +17,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import logging
 import os
@@ -25,7 +27,7 @@ import os
 
 # Change this variables if not running
 Accounts_Path = "accounts.txt"
-ChromeUser_Dir = "C:\\Users\\user\\AppData\\Local\\Google\\Chrome\\User Data\\Default" # This is an exmple, put your own Chrome User Profile
+ChromeUser_Dir = os.path.join(os.environ['LOCALAPPDATA'], 'Google', 'Chrome', 'User Data', 'Default') # This is an exmple, put your own Chrome User Profile
 log_Path = "Packtpub.log"
 
 
@@ -65,7 +67,6 @@ def read_users():
 # --------------------------------------------------------------------------------------------------
 
 # FUNZIONE DI RICHIESTA WEB
-
 def WebRequest(XPATH, Key = Keys.ENTER):
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, XPATH))).send_keys(Key)
 
@@ -97,14 +98,13 @@ options.add_argument("user-data-dir=" + ChromeUser_Dir)
 options.add_argument('--headless=new')
 options.add_argument("--disable-gpu")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
-
 # --------------------------------------------------------------------------------------------------
 
 # INIZIO EFFETTIVO DELLO SCRIPT
 
 # Apro Chrome
 log_info("Apro Chrome")
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 log_info("Chrome aperto con le Custom Option")
 
 # Per ogni utente riscatto il libro
