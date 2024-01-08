@@ -1,14 +1,14 @@
 # PacktPub_FreeLearning.pyw
 #
-# Data Creazione: 19/02/2023
-# Ultima Modifica: 27/09/2023
-# Versione: 2.0
-# Autore: xJackyll
+# Creation Date: 19/02/2023
+# Last Modified: 09/27/2023
+# Version: 2.0
+# Author: xJackyll
 #
-# Questo script, leggendo un file di testo, riscatta il libro del giorno per ogni account specificato.
-# Attenzione: i captcha non sono supportati da questo script.
+# This script, reading a text file, redeems the book of the day for each specified account.
+# Warning: captcha are not supported by this script.
 #
-# N.B.  Non modificare lo script se non si ha chiaro cosa si sta facendo
+# N.B. Do not modify the script unless you are clear about what you are doing.
 
 
 from selenium import webdriver
@@ -25,7 +25,7 @@ import os
 
 # --------------------------------------------------------------------------------------------------
 
-# Change this variables if not running
+# Change these variables if not running
 Accounts_Path = "accounts.txt"
 ChromeUser_Dir = os.path.join(os.environ['LOCALAPPDATA'], 'Google', 'Chrome', 'User Data', 'Default') # This is an exmple, put your own Chrome User Profile
 log_Path = "Packtpub.log"
@@ -33,7 +33,7 @@ log_Path = "Packtpub.log"
 
 # --------------------------------------------------------------------------------------------------
 
-# FUNZIONI DI LOG
+# LOG FUNCTION
 
 def log_info(message):
     logging.info(message)
@@ -48,8 +48,8 @@ def log_error(message):
 
 # --------------------------------------------------------------------------------------------------
 
-# FUNZIONE DI LETTURA USERNAME E PASSWORDS
 
+# READING CREDENTIAL FUNCTION
 def read_users():
     with open(Accounts_Path) as f:
         lines = f.readlines()
@@ -66,20 +66,21 @@ def read_users():
 
 # --------------------------------------------------------------------------------------------------
 
+
 # FUNZIONE DI RICHIESTA WEB
 def WebRequest(XPATH, Key = Keys.ENTER):
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, XPATH))).send_keys(Key)
 
 # --------------------------------------------------------------------------------------------------
 
-# SETUP LOG
+# LOG SETUP
 
-# Imposta il livello di log per visualizzare info, warning ed error
+# Set the logging level to display info, warning and error
 logging.basicConfig(level=logging.INFO)
 
-errori = 0
+errors = 0
 
-# Crea un file di log e imposta il formato del messaggio di log
+# Create a log file and set the format of the log message.
 log_file = os.path.join(log_Path)
 file_handler = logging.FileHandler(log_file)
 file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
@@ -88,64 +89,64 @@ logging.getLogger().addHandler(file_handler)
 
 # --------------------------------------------------------------------------------------------------
 
-# SETUP CHROME CON SELENIUM
+# SETUP CHROME WITH SELENIUM
+# setup selenium options (using a default user, don't opening Chrome window tabs etc...)
 
-# SETUP CHROME CON SELENIUM
-# setup opzioni selenium (uso un default user, non apro la finestra di chrome etc...)
-# Warning: sometimes a captcha appears and break the code. if you comment out the headless argument line you can manually do the captcha.
+# Warning: sometimes a captcha appears and break the code.
+# if you comment out the headless argument line you can manually do the captcha.
 options = webdriver.ChromeOptions()
 options.add_argument("user-data-dir=" + ChromeUser_Dir)
-options.add_argument('--headless=new')
+#options.add_argument('--headless=new')
 options.add_argument("--disable-gpu")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 # --------------------------------------------------------------------------------------------------
 
-# INIZIO EFFETTIVO DELLO SCRIPT
+# SCRIPT START
 
-# Apro Chrome
-log_info("Apro Chrome")
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-log_info("Chrome aperto con le Custom Option")
+# Opening Chrome
+log_info("Opening Chrome... ")
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+log_info("Chrome opened with Custom Option")
 
-# Per ogni utente riscatto il libro
+# For each user it redeems the daily book
 
 for user, passwd in read_users():
     time.sleep(5)
     log_info("USER: " + user)
-    log_info("Pagina di default di Packtpub")
+    log_info("PackPub Default Page")
     driver.get("https://www.packtpub.com/free-learning")
 
     try:
 
-        #  Controllo che esista il bottone di sign in, se non lo trovo sul sito assumo che siamo gia' autenticati
+        # Check that the login button exists, if it is not found it is assumed that we are already authenticated.
         try:
-            log_info("Tentivo di accedere alla pagina di login")
+            log_info("Login attempt... ")
             time.sleep(3)
             #WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/main/header/div/div[2]/div/div[2]/div[1]/form/div[5]/div/div[2]/a/button"))).click()
             WebRequest('/html/body/div[1]/div/main/header/div/div[2]/div/div[2]/div[1]/form/div[5]/div/div[2]/a/button')
 
             # Immetto le credenziali di accesso nella pagina di login
-            log_info('Pagina di login raggiunta!')
-            log_info("Immetto email e pw...")
+            log_info('Login page reached!')
+            log_info("Input the credentials")
             time.sleep(3)
             WebRequest('/html/body/div[1]/div/div/div[2]/div/div/form/div[1]/div[1]/div[1]/input', user)
             WebRequest('/html/body/div[1]/div/div/div[2]/div/div/form/div[1]/div[1]/div[2]/input', passwd)
             WebRequest('/html/body/div[1]/div/div/div[2]/div/div/form/div[1]/div[1]/div[2]/input')   
 
         except:
-            log_info("siamo gia' autenticati")
+            log_info("Already authenticated")
 
-        # Bottone di riscatto del libro
+        # Clicking the Redeem Button
         time.sleep(3)
         WebRequest("/html/body/div[1]/div/main/header/div/div[2]/div/div/div/div[2]/button")
-        log_info("Libro riscattato!")
-        #WebRequest("/html/body/div[1]/div/div[2]/nav/div[4]/a[3]")
+        log_info("Book redeemed!")
+        # WebRequest("/html/body/div[1]/div/div[2]/nav/div[4]/a[3]")
         driver.get("https://subscription.packtpub.com/logout")
-        log_info("Logout dell'account eseguito")
+        log_info("Logout... ")
 
     except:
-        log_error("c'e' stato un errore!!! Account: " + user)
+        log_error("Error!!! Account: " + user)
 
 
 driver.quit()
-log_info("Lo script e' terminato con %d errori." % errori)
+log_info("The script ended with %d errors." % errors)
