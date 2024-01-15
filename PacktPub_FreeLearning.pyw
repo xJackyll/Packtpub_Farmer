@@ -140,6 +140,7 @@ for user, passwd in read_users():
         time.sleep(3)
         WebRequest("/html/body/div[1]/div/main/header/div/div[2]/div/div/div/div[2]/button")
         log_info("Book redeemed!")
+        time.sleep(3)
         # WebRequest("/html/body/div[1]/div/div[2]/nav/div[4]/a[3]")
         driver.get("https://subscription.packtpub.com/logout")
         log_info("Logout... ")
